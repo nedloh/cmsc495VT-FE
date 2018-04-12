@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
+        <link rel="stylesheet" href="VTstyle.css">
+        <title>VT Cloud Scan Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>VT Cloud Scan</h1>
+
+        <div class="search" id="searchBar" >
+            <div class="search-container" id="searchContainer">
+                <form action="">
+                    <input type="text" placeholder="Search VT Cloud Scan... " id="searchbox">
+                    <button type="button" onclick="filenameSearch()"><i class="fa fa-search">Filename</i></button>
+                    <button type="button" onclick="md5Search()"><i class="fa fa-search">MD5</i></button>
+                    <button type="button" onclick="maliciousFileSearch()"><i class="fa fa-search">Malicious</i></button>
+                    <button type="button" class="dropbtn" onclick="myFunction()" ><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="dropdown-content" id="myDropdown">
+                        <a href="#">Join Google Drive to VT Cloud Scan</a>
+                        <!When user clicks this href the files that were batch scanned and stored in the DB will
+                        be called to the data table by the displayBatchScan() function.>
+                        <a href="#" onclick ="displayBatchScan()">Scan Joined Google Drive</a>
+                        <a href="#">Filename Exclusion Settings</a>
+                        <a href="#">MIME Exclusion Settings</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function myFunction() {
+                document.getElementById("myDropdown").classList.toggle("show");
+            }
+            window.onclick = function (e) {
+                if (!e.target.matches('.dropbtn')) {
+                    var myDropdown = document.getElementById("myDropdown");
+                    if (myDropdown.classList.contains('show')) {
+                        myDropdown.classList.remove('show');
+                    }
+                }
+            }
+        </script>
+<!These functions all set a different php file for the data table.  The php files all have different 
+    SELECT statements and some have user input as a WHERE clause for searches.  The isMalicious search 
+    will display all malicious files found under that user in the DB>
+        <script>
+            function displayBatchScan(){
+            phpFile = "json_test_db_post.php";
+            changeTable(phpFile);   }
+        </script>
+        
+        <script>
+            var userInput, phpFile;
+            function filenameSearch(){
+            userInput = document.getElementById("searchbox").value;
+            phpFile = "filenameSearch.php";
+            $.post(phpFile, {variable: userInput});
+            changeTable(phpFile);   }
+        </script>
+        
+        <script>
+            function md5Search(){
+            userInput = document.getElementById("searchbox").value;
+            phpFile = "md5Search.php";
+            $.post(phpFile, {variable: userInput});
+            changeTable(phpFile);   }
+        </script>
+        <script>
+            function isMaliciousSearch(){
+            phpFile = "isMaliciousSearch.php";
+            changeTable(phpFile);   }
+        </script>
+
+        <script>
+            /*This is where the data from the SQLite DB will populate a table.
+             * The php file stores all the data it recieves from the DB into an array,
+             * The array will fill each table cell and is referenced by the name of the column in the DB.
+             * A row will be generated for each file found, with each specified piece of data such 
+             * as filename, MIME type, Date, etc. whatever we put in the SQL Select statement in the php file.
+             */
+            function changeTable(phpFile) {
+                var obj, dbParam, xmlhttp, myObj, x, txt = "";
+                obj = {"table": fileTable};
+                dbParam = JSON.stringify(obj);
+                xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        myObj = JSON.parse(this.responseText);
+                        txt += "<table border ='1'>"
+                        for (x in myObj) {
+                            /*Need to add other column names for other <td></td>*/
+                            txt += "<tr><td>" + myObj[x].filename + "</td><td>" + myObj[x].mimeID +
+                                   "</td><td>" + myObj[x].mimeID + "</td><td>" + myObj[x].isMalicious +
+                                   "</td><td>" + myObj[x].scanDate + "</td></tr>";
+                        }
+                        txt += "</table>"
+                       
+                    }
+                };
+                xmlhttp.open("POST", phpFile, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xmlhttp.send("x=" + dbParam);
+            }
+        </script> 
+    </body>
+</html>
