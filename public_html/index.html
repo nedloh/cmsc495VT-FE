@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+Authors: Joel Braun and Tiffany Holden
+VirusTotal Group
 -->
 <html>
     <head>
@@ -30,22 +29,24 @@ and open the template in the editor.
                     dataType: "json" } );
             }
 
-            function vt_success( scanData ) {
-               console.dir( scanData );
-               for (var i = 0; i < scanData.length; i++ ) {
-                    if ($('#'+scanData[i].fileId).hasClass("results") == false) {
-                        if( scanData[i].scanned == 1) { 
-                            var malicousLink = '<td><a target="blank" href="' + scanData[i].permalink;
-                            malicousLink += '"><i class="fas fa-bug"></i></a></td>';
-                            $('#'+scanData[i].fileId).append(malicousLink);
-                        } else {
-                            $('#'+scanData[i].fileId).append('<td><i class="fab fa-searchengin"></i></td>');
+            function vt_success(scanData) {
+                    console.dir(scanData);
+                    for (var i = 0; i < scanData.length; i++) {
+                        if ($('#' + scanData[i].fileId).hasClass("results") == false) {
+                            if (scanData[i].scanned == 1) {
+                                var malicousLink = '<td><a target="blank" href="' + scanData[i].permalink;
+                                malicousLink += '"><i class="fas fa-bug"></i></a></td>';
+                                $('#' + scanData[i].fileId).append(malicousLink);
+                                $('#' + scanData[i].fileId).append('<td>' + scanData[i].scanDate + '</td>');
+                            } else {
+                                $('#' + scanData[i].fileId).append('<td><i class="fab fa-searchengin"></i></td>');
+                                $('#' + scanData[i].fileId).append('<td> TBD </td>');
+                            }
+                            $('#' + scanData[i].fileId).addClass("results");
                         }
-                        $('#'+scanData[i].fileId).addClass("results");
                     }
-               }
-               setTimeout(vtResults, 2000);
-            }
+                    setTimeout(vtResults, 2000);
+                }
 
             function is_logged_in() {
                 $.ajax({ url: "api/1/user/loggedin",
@@ -159,8 +160,14 @@ and open the template in the editor.
             </div>
         </div>
 
-        <div id="dataDiv">
+         <div id="dataDiv">
             <table id="dataTable">
+                <tr>
+                    <th>Filename</th>
+                    <th>MIME Type</th>
+                    <th>Scan Result</th>
+                    <th>Scan Date</th>
+                </tr>
                 <tbody>
                 </tbody>
             </table>
