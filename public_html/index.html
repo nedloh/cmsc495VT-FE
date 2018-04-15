@@ -34,9 +34,12 @@ and open the template in the editor.
                console.dir( scanData );
                for (var i = 0; i < scanData.length; i++ ) {
                     if ($('#'+scanData[i].fileId).hasClass("results") == false) {
-                        if( scanData[i].scanned == 1) { $('#'+scanData[i].fileId).append("<td>was scanned on " + scanData[i].scanDate + "</td>");
+                        if( scanData[i].scanned == 1) { 
+                            var malicousLink = '<td><a target="blank" href="' + scanData[i].permalink;
+                            malicousLink += '"><i class="fas fa-bug"></i></a></td>';
+                            $('#'+scanData[i].fileId).append(malicousLink);
                         } else {
-                            $('#'+scanData[i].fileId).append("<td>was not scanned!</td>");
+                            $('#'+scanData[i].fileId).append('<td><i class="fab fa-searchengin"></i></td>');
                         }
                         $('#'+scanData[i].fileId).addClass("results");
                     }
