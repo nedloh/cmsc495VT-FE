@@ -69,6 +69,7 @@ and open the template in the editor.
                         $.ajax({ url: "api/1/files",
                             success: gd_success,
                             dataType: "json" } );
+                        $('#myDropdown').toggle();
                     });
                     $('.dropbtn').click( function() {
                         $('#myDropdown').toggle();
