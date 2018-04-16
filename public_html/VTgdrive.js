@@ -128,7 +128,7 @@ function logged_data(loginStatus) {
         /* User is not logged in show them register button */
         let loginButton = document.createElement('button');
         loginButton.id = "registerDrive";
-        loginButton.value = "Register";
+        loginButton.innerHTML = "Register";
         $(loginButton).click(function(e) {
             e.preventDefault();
             window.location = "https://www.vtgdrive.us/authorize";
