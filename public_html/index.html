@@ -4,42 +4,44 @@ Authors: Joel Braun and Tiffany Holden
 VirusTotal Group
 -->
 <html>
-    <head>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"
-              integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1"
-              crossorigin="anonymous">
-        <link rel="stylesheet" href="VTstyle.css">
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-                crossorigin="anonymous"></script>
-        <script src="VTgdrive.js" ></script>
-        <title>VT Cloud Scan Application</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body >
-        <div class="search" id="searchBar" >
-            <div style="display: inline-block;" class="search-container" id="searchContainer">
-                <form>
+
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"
+        integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="VTstyle.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="VTgdrive.js"></script>
+    <title>VT Cloud Scan Application</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="search" id="searchBar">
+        <div style="display: inline-block;" class="search-container" id="searchContainer">
+            <form>
                 <textfield>VT Cloud Scan</textfield>
                 <input type="text" placeholder="Search VT Cloud Scan... " id="searchbox">
                 <button type="button" onclick="maliciousFileSearch()"><i class="fa fa-search"></i></button>
                 <div style="display: inline-block;" id="contextMenu"></div>
-                </form>
-            </div>
+            </form>
         </div>
+    </div>
 
-         <div id="dataDiv">
-            <table id="dataTable">
-                <tr>
-                    <th>Filename</th>
-                    <th>MIME Type</th>
-                    <th>Scan Result</th>
-                    <th>Scan Date</th>
-                </tr>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </body>
+    <div id="dataDiv">
+        <table id="dataTable">
+            <tr>
+                <th>Filename</th>
+                <th>MIME Type</th>
+                <th>Scan Result</th>
+                <th>Scan Date</th>
+            </tr>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+
 </html>
