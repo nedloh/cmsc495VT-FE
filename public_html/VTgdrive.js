@@ -20,13 +20,13 @@ function vt_link_cell(vt_result) {
     let cell = document.createElement('td');
     if (vt_result.scanned == 1) {
         let malicousLink = document.createElement('a');
-        malicousLink.href = vt_result.permalink; 
+        malicousLink.href = vt_result.permalink;
         malicousLink.target = "blank";
         malicousLink.appendChild(fa_icon('fa-bug'));
         cell.appendChild(malicousLink);
     } else {
         let scanLink = document.createElement('a');
-        scanLink.href = "#"; 
+        scanLink.href = "#";
         scanLink.appendChild(fa_icon('fa-search-plus'));
         cell.appendChild(scanLink);
     }
@@ -36,7 +36,7 @@ function vt_link_cell(vt_result) {
 function vt_scan_date_cell(vt_result) {
     let cell = document.createElement('td');
     if (vt_result.scanned == 1) {
-        cell.innerText = vt_result.scanDate; 
+        cell.innerText = vt_result.scanDate;
     } else {
         cell.innerText = "TBD";
     }
@@ -48,8 +48,8 @@ function vt_success(scanData) {
     for (var i = 0; i < scanData.length; i++) {
         let vt_file = $('#' + scanData[i].fileId);
         if (vt_file.hasClass("hasResults") == false) {
-            vt_file.append(vt_link_cell(scanData[i])); 
-            vt_file.append(vt_scan_date_cell(scanData[i])); 
+            vt_file.append(vt_link_cell(scanData[i]));
+            vt_file.append(vt_scan_date_cell(scanData[i]));
             vt_file.addClass("hasResults");
         }
     }
@@ -64,9 +64,9 @@ function is_logged_in() {
     });
 }
 
-function fa_icon( fa_type ) {
+function fa_icon(fa_type) {
     let fa_element = document.createElement('i');
-    fa_element.className = "fas " + fa_type; 
+    fa_element.className = "fas " + fa_type;
     return fa_element;
 }
 
@@ -75,7 +75,10 @@ function dropdown_menu() {
 
     let dd_menu = document.createElement('button');
     dd_menu.className = "dropbtn";
-    $(dd_menu).click(() => $('#myDropdown').toggle());
+    $(dd_menu).click((e) => {
+        e.preventDefault();
+        $('#myDropdown').toggle();
+    });
     dd_menu.appendChild(fa_icon('fa-ellipsis-v'));
     drop_menu_div.appendChild(dd_menu);
 
@@ -112,7 +115,7 @@ function dropdown_menu() {
     mime_link.innerText = "MIME Exclusion Settings";
     menu_items.appendChild(mime_link);
     drop_menu_div.appendChild(menu_items);
-    
+
     $(drop_menu_div).on('click', '.dd_item', () => $('#myDropdown').toggle());
     return drop_menu_div;
 }
@@ -125,12 +128,12 @@ function logged_data(loginStatus) {
         /* User is not logged in show them register button */
         let loginButton = document.createElement('button');
         loginButton.id = "registerDrive";
-        loginButton.innerText('Register');
+        loginButton.value = "Register";
         $(loginButton).click(function(e) {
-                e.preventDefault();
-                window.location = "https://www.vtgdrive.us/authorize";
-                is_logged_in();
-            });
+            e.preventDefault();
+            window.location = "https://www.vtgdrive.us/authorize";
+            is_logged_in();
+        });
         $('#contextMenu').html(loginButton);
     }
 }
