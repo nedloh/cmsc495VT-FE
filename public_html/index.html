@@ -8,148 +8,16 @@ VirusTotal Group
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"
               integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1"
               crossorigin="anonymous">
-        <link rel="stylesheet" href="VTstyle2.css">
+        <link rel="stylesheet" href="VTstyle.css">
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
                 crossorigin="anonymous"></script>
+        <script src="VTgdrive.js" ></script>
         <title>VT Cloud Scan Application</title>
         <meta charset="UTF-8">
-        <script>
-            function myFunction() {
-                document.getElementById("myDropdown").classList.toggle("show");
-            }
-            function displayBatchScan(){
-                phpFile = "json_test_db_post.php";
-                changeTable(phpFile);   
-            }
-        $( function() {
-            function vtResults() {
-                $.ajax({ url: "api/1/files/scans",
-                    success: vt_success,
-                    dataType: "json" } );
-            }
-
-            function vt_success(scanData) {
-                    console.dir(scanData);
-                    for (var i = 0; i < scanData.length; i++) {
-                        if ($('#' + scanData[i].fileId).hasClass("results") == false) {
-                            if (scanData[i].scanned == 1) {
-                                var malicousLink = '<td><a target="blank" href="' + scanData[i].permalink;
-                                malicousLink += '"><i class="fas fa-bug"></i></a></td>';
-                                $('#' + scanData[i].fileId).append(malicousLink);
-                                $('#' + scanData[i].fileId).append('<td>' + scanData[i].scanDate + '</td>');
-                            } else {
-                                $('#' + scanData[i].fileId).append('<td><i class="fab fa-searchengin"></i></td>');
-                                $('#' + scanData[i].fileId).append('<td> TBD </td>');
-                            }
-                            $('#' + scanData[i].fileId).addClass("results");
-                        }
-                    }
-                    setTimeout(vtResults, 2000);
-                }
-
-            function is_logged_in() {
-                $.ajax({ url: "api/1/user/loggedin",
-                    success: logged_data,
-                    dataType: "json" } );
-            }
-
-            function logged_data( loginStatus ) {
-                if (loginStatus.loggedin == 1 ) {
-                    /* User is logged in already show them the menu */
-                    var dropDownMenu = '<button type="button" class="dropbtn" onclick="myFunction()" ><i class="fas fa-ellipsis-v"></i></button> \
-                    <div class="dropdown-content" id="myDropdown"> \
-                            <!When user clicks this href the files that were batch scanned and stored in the DB will\
-                            be called to the data table by the displayBatchScan() function.>\
-                            <a id="scanDrive" href="#">Scan Joined Google Drive</a>\
-                            <a href="#">Filename Exclusion Settings</a>\
-                            <a href="#">MIME Exclusion Settings</a>\
-                        </div>';
-                    $('#contextMenu').html(dropDownMenu);
-                    $('#scanDrive').click( function() {
-                        $.ajax({ url: "api/1/files",
-                            success: gd_success,
-                            dataType: "json" } );
-                        $('#myDropdown').toggle();
-                    });
-                    $('.dropbtn').click( function() {
-                        $('#myDropdown').toggle();
-                    });
-                } else {
-                    /* User is not logged in show them register button */
-                    var loginButton = '<button id="registerDrive">Register</button>';
-                    $('#contextMenu').html(loginButton);
-                    $('#registerDrive').click( function(e) {
-                        e.preventDefault();
-                        window.location = "https://www.vtgdrive.us/authorize";
-                        is_logged_in();
-                    });
-                }
-            }
-
-            function gd_success( driveData ) {
-                console.dir( driveData );
-                for (var i = 0; i < driveData.length; i++ ) {
-                    var rowData = "<tr id=" + driveData[i].fileId + "><td>";
-                    rowData += driveData[i].fileName + '</td>';
-                    rowData += '<td>' + driveData[i].mimeType + '</td></tr>';
-                    $('#dataTable > tbody:last-child').append(rowData);
-                }
-                setTimeout(vtResults, 1000); 
-            }
-            window.onload = is_logged_in;
-            });
-            var userInput, phpFile;
-            function filenameSearch() {
-                userInput = document.getElementById("searchbox").value;
-                phpFile = "filenameSearch.php";
-                $.post(phpFile, {variable: userInput});
-                changeTable(phpFile);   
-            }
-            function md5Search() {
-                userInput = document.getElementById("searchbox").value;
-                phpFile = "md5Search.php";
-                $.post(phpFile, {variable: userInput});
-                changeTable(phpFile);   
-            }
-            function isMaliciousSearch(){
-                phpFile = "isMaliciousSearch.php";
-                changeTable(phpFile);   
-            }
-            /*This is where the data from the SQLite DB will populate a table.
-             * The php file stores all the data it recieves from the DB into an array,
-             * The array will fill each table cell and is referenced by the name of the column in the DB.
-             * A row will be generated for each file found, with each specified piece of data such 
-             * as filename, MIME type, Date, etc. whatever we put in the SQL Select statement in the php file.
-             */
-            function changeTable(phpFile) {
-                var obj, dbParam, xmlhttp, myObj, x, txt = "";
-                obj = {"table": fileTable};
-                dbParam = JSON.stringify(obj);
-                xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        myObj = JSON.parse(this.responseText);
-                        txt += "<table border ='1'>"
-                        for (x in myObj) {
-                            /*Need to add other column names for other <td></td>*/
-                            txt += "<tr><td>" + myObj[x].filename + "</td><td>" + myObj[x].mimeID +
-                                   "</td><td>" + myObj[x].mimeID + "</td><td>" + myObj[x].isMalicious +
-                                   "</td><td>" + myObj[x].scanDate + "</td></tr>";
-                        }
-                        txt += "</table>"
-                       
-                    }
-                };
-                xmlhttp.open("POST", phpFile, true);
-                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xmlhttp.send("x=" + dbParam);
-            }
-        </script> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body >
-        
         <div class="search" id="searchBar" >
             <div style="display: inline-block;" class="search-container" id="searchContainer">
                 <form>
@@ -173,6 +41,5 @@ VirusTotal Group
                 </tbody>
             </table>
         </div>
-
     </body>
 </html>
