@@ -1,0 +1,10 @@
+version: "3"
+services:
+  web-worker:
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./public_html:/code/static
